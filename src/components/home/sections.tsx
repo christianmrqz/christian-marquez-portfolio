@@ -110,10 +110,10 @@ export function QuickFacts({ compact = false }: { compact?: boolean }) {
           term: "Contacto",
           detail: (
             <>
-              <a className="link-underline break-all" href={`mailto:${profile.email}`}>
+              <a className="link-underline inline-block min-h-6 break-all py-0.5" href={`mailto:${profile.email}`}>
                 {profile.email}
               </a>
-              <a className="link-underline block w-fit" href={profile.phone.href}>
+              <a className="link-underline block min-h-6 w-fit py-0.5" href={profile.phone.href}>
                 {profile.phone.display}
               </a>
               <span className="block text-muted">

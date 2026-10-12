@@ -12,3 +12,6 @@ playwright-report/
 .vercel
 .dev.log
 .erp.log
+
+.vercel
+.env*

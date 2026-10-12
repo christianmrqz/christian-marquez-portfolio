@@ -2,6 +2,8 @@ import { defineConfig } from "@playwright/test";
 
 const PORT = 3200;
 const ERP_PORT = 8011;
+/** Con E2E_BASE_URL se prueba un despliegue ya publicado (sin levantar servidores locales). */
+const external = process.env.E2E_BASE_URL;
 const python = process.env.PYTHON ?? (process.platform === "win32" ? "python" : "python3");
 
 /**
@@ -14,8 +16,8 @@ export default defineConfig({
   timeout: 45_000,
   retries: 0,
   reporter: [["list"]],
-  use: { baseURL: `http://127.0.0.1:${PORT}`, channel: "chrome", trace: "retain-on-failure" },
-  webServer: [
+  use: { baseURL: external ?? `http://127.0.0.1:${PORT}`, channel: "chrome", trace: "retain-on-failure" },
+  webServer: external ? [] : [
     { command: `${python} -m erp_service.server ${ERP_PORT}`, url: `http://127.0.0.1:${ERP_PORT}/api/erp?op=health`, reuseExistingServer: false },
     {
       command: `npx next build && npx next start -p ${PORT}`,
