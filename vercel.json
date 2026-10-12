@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "regions": ["cdg1"],
+  "functions": {
+    "api/erp.py": { "includeFiles": "erp_service/**", "maxDuration": 15 }
+  }
+}

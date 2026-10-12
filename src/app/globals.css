@@ -1,0 +1,286 @@
+@import "tailwindcss";
+
+/*
+ * Sistema de diseño del portfolio.
+ * Grafito, marfil y azul eléctrico. El azul se reserva para señales: enlaces, foco, datos en movimiento.
+ * Los contrastes de texto cumplen WCAG AA: blue sobre ivory 5,3:1 · blue-soft sobre graphite 5,8:1.
+ */
+@theme {
+  --color-ivory: #f4f1ea;
+  --color-paper: #fbfaf6;
+  --color-sand: #e9e4d8;
+  --color-line: #d8d1c2;
+  --color-graphite: #17181c;
+  --color-graphite-2: #212329;
+  --color-graphite-3: #33363e;
+  --color-muted: #5a5c62;
+  --color-muted-dark: #a3a5ad;
+  --color-blue: #1f4bff;
+  --color-blue-soft: #8199ff;
+  --color-blue-wash: #e2e7ff;
+  --color-ok: #17704a;
+  --color-warn: #8a5300;
+  --color-err: #b3261e;
+
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+
+  --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --animate-flow: flow 1.6s linear infinite;
+  --animate-rise: rise 0.6s var(--ease-out-soft) both;
+
+  @keyframes flow {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+  /* Entrada al hacer scroll: solo desplaza, nunca oculta. Si la línea temporal no avanza, el contenido sigue visible. */
+  @keyframes slide-in {
+    from {
+      transform: translateY(28px);
+    }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-ivory);
+    color: var(--color-graphite);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-blue);
+    color: white;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--color-blue-soft);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+@layer components {
+  /* Rejilla editorial: 16px de margen en móvil, 12 columnas en escritorio. */
+  .container-page {
+    width: 100%;
+    max-width: 84rem;
+    margin-inline: auto;
+    padding-inline: max(1rem, env(safe-area-inset-left));
+  }
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .link-underline {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: color-mix(in oklab, currentColor 35%, transparent);
+    transition: text-decoration-color 160ms;
+  }
+  .link-underline:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding-inline: 1.15rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition:
+      background-color 160ms,
+      color 160ms,
+      border-color 160ms,
+      transform 160ms var(--ease-out-soft);
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn-primary {
+    background: var(--color-graphite);
+    color: var(--color-ivory);
+  }
+  .btn-primary:hover {
+    background: var(--color-blue);
+  }
+  .btn-ghost {
+    border: 1px solid var(--color-line);
+    color: var(--color-graphite);
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-graphite);
+  }
+  .on-dark .btn-primary {
+    background: var(--color-ivory);
+    color: var(--color-graphite);
+  }
+  .on-dark .btn-primary:hover {
+    background: var(--color-blue-soft);
+  }
+  .on-dark .btn-ghost {
+    border-color: var(--color-graphite-3);
+    color: var(--color-ivory);
+  }
+  .on-dark .btn-ghost:hover {
+    border-color: var(--color-ivory);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-muted);
+    white-space: nowrap;
+  }
+  .on-dark .chip {
+    border-color: var(--color-graphite-3);
+    color: var(--color-muted-dark);
+  }
+
+  .kbd {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    border: 1px solid currentColor;
+    border-radius: 0.3rem;
+    padding: 0.05rem 0.35rem;
+    opacity: 0.7;
+  }
+
+  /* Entrada al hacer scroll: mejora progresiva; sin soporte o con movimiento reducido el contenido ya es visible. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        animation: slide-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 40%;
+      }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+}
+
+/*
+ * Demo B: tokens del panel. Tres temas del mismo sistema de diseño; los componentes solo usan variables.
+ * Contrastes de texto ≥ 4,5:1 en los tres temas.
+ */
+.dash {
+  --d-bg: #f7f7f5;
+  --d-surface: #ffffff;
+  --d-surface-2: #f1f1ee;
+  --d-border: #e2e2dd;
+  --d-text: #1b1c20;
+  --d-muted: #5d5f66;
+  --d-accent: #1f4bff;
+  --d-accent-text: #ffffff;
+  --d-row-y: 0.85rem;
+  --d-ok: #17704a;
+  --d-info: #1f4bff;
+  --d-warn: #8a5300;
+  --d-err: #b3261e;
+  --d-ok-bg: #e8f5ee;
+  --d-info-bg: #e9edff;
+  --d-warn-bg: #fdf3e2;
+  --d-err-bg: #fdecea;
+  background: var(--d-bg);
+  color: var(--d-text);
+}
+.dash[data-theme="grafito"] {
+  --d-bg: #121317;
+  --d-surface: #1a1c21;
+  --d-surface-2: #23252b;
+  --d-border: #2e3139;
+  --d-text: #ecedf0;
+  --d-muted: #a3a6ae;
+  --d-accent: #8199ff;
+  --d-accent-text: #121317;
+  --d-ok: #6fd3a1;
+  --d-info: #a5b6ff;
+  --d-warn: #f2be6b;
+  --d-err: #ff9a8f;
+  --d-ok-bg: #173126;
+  --d-info-bg: #1f2747;
+  --d-warn-bg: #3a2c12;
+  --d-err-bg: #3d1c1a;
+  color-scheme: dark;
+}
+.dash[data-theme="contraste"] {
+  --d-bg: #ffffff;
+  --d-surface: #ffffff;
+  --d-surface-2: #f0f0f0;
+  --d-border: #000000;
+  --d-text: #000000;
+  --d-muted: #2b2b2b;
+  --d-accent: #0030d9;
+  --d-ok: #005c2e;
+  --d-info: #0030d9;
+  --d-warn: #6b3d00;
+  --d-err: #9e0000;
+  --d-ok-bg: #ffffff;
+  --d-info-bg: #ffffff;
+  --d-warn-bg: #ffffff;
+  --d-err-bg: #ffffff;
+}
+.dash[data-density="compacta"] {
+  --d-row-y: 0.4rem;
+}
+.dash :focus-visible {
+  outline-color: var(--d-accent);
+}
