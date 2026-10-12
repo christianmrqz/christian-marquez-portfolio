@@ -50,6 +50,7 @@ export const commandItems: CommandItem[] = [
   ...labDemos.map<CommandItem>((d) => ({ id: `lab-${d.slug}`, group: "Proyectos", label: d.title, hint: d.kicker, href: d.href })),
   { id: "copy-email", group: "Acciones", label: "Copiar email", hint: profile.email, action: "copy-email", keywords: "correo contacto" },
   { id: "linkedin", group: "Acciones", label: "Abrir LinkedIn", href: profile.linkedin, external: true },
+  { id: "repo", group: "Acciones", label: "Ver el código de esta web", hint: "GitHub", href: profile.repo, external: true, keywords: "repositorio github" },
   { id: "open-dexlab", group: "Acciones", label: "Abrir DexLab", hint: "pokedex-ia-nu.vercel.app", href: DEXLAB_URL, external: true },
   ...profile.cv.map<CommandItem>((cv) => ({ id: `cv-${cv.href}`, group: "Acciones", label: `Descargar ${cv.label}`, hint: "PDF", href: cv.href, external: true, keywords: "curriculum" })),
 ];

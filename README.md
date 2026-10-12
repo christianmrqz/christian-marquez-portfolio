@@ -1,5 +1,7 @@
 # Portfolio · Christian Márquez Alonso
 
+**En producción:** https://christian-marquez-portfolio.vercel.app · Cada push a `main` se despliega automáticamente en Vercel.
+
 Portfolio profesional de un desarrollador frontend / full stack, con un proyecto publicado incrustado (DexLab) y dos demos para probar: una integración solicitud → ERP con un servicio Python y un panel de incidencias.
 
 - **Next.js 16** (App Router) · **React 19** · **TypeScript estricto** · **Tailwind CSS 4**

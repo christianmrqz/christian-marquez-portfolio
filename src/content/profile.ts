@@ -17,6 +17,7 @@ export const profile = {
   phone: { display: "+34 646 900 436", href: "tel:+34646900436" },
   linkedin: "https://www.linkedin.com/in/christian-m%C3%A1rquez-alonso/",
   github: "https://github.com/christianmrqz",
+  repo: "https://github.com/christianmrqz/christian-marquez-portfolio",
   // En Vercel se usa el dominio de producción automáticamente; en local, localhost.
   siteUrl:
     process.env.NEXT_PUBLIC_SITE_URL ??

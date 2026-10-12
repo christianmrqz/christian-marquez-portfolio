@@ -20,6 +20,11 @@ export function SiteFooter() {
             </a>
           </li>
           <li>
+            <a className="link-underline hover:text-ivory" href={profile.repo} target="_blank" rel="noopener noreferrer">
+              Código de esta web
+            </a>
+          </li>
+          <li>
             <Link className="link-underline hover:text-ivory" href="/vista-rapida">
               Vista rápida
             </Link>
