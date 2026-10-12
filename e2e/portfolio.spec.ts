@@ -76,10 +76,21 @@ test("DexLab: se carga bajo demanda y se puede usar dentro del iframe @externo",
   const frame = page.frameLocator('iframe[title^="DexLab"]');
   const search = frame.getByPlaceholder(/Nombre o número/);
   await expect(search).toBeVisible({ timeout: 20_000 });
-  await search.pressSequentially("drapio", { delay: 40 });
-  await page.waitForTimeout(800);
+  // Si se escribe antes de que DexLab hidrate su buscador, el texto se pierde: se reintenta hasta ver la sugerencia
+  // (y no basta con el texto «Drapion»: la portada de DexLab ya tiene un botón con ese nombre).
+  await expect(async () => {
+    // DexLab pide su índice de búsqueda al recibir el foco: se vuelve a enfocar en cada intento.
+    await search.blur();
+    await search.click();
+    await search.fill("");
+    await search.pressSequentially("drapio", { delay: 40 });
+    await expect(frame.getByRole("option", { name: /Drapion #0452/ })).toBeVisible({ timeout: 5_000 });
+  }).toPass({ timeout: 40_000 });
   await search.press("Enter");
-  await expect(frame.getByRole("heading", { level: 1, name: /Drapion/ })).toBeVisible({ timeout: 20_000 });
+  // La navegación ocurre dentro del iframe: se comprueba su URL y después la ficha en ese documento.
+  await expect.poll(() => page.frames().find((f) => f.url().includes("pokedex-ia"))?.url(), { timeout: 20_000 }).toMatch(/\/pokemon\/drapion$/);
+  const dexFrame = page.frames().find((f) => f.url().includes("/pokemon/drapion"))!;
+  await expect(dexFrame.getByRole("heading", { level: 1, name: /Drapion/ })).toBeVisible({ timeout: 20_000 });
   await expect(page).toHaveURL(/\/proyectos\/dexlab$/); // la app no navega el portfolio
   await page.getByText("Móvil · 390").click();
   await expect.poll(() => page.locator("iframe").evaluate((el) => el.getBoundingClientRect().width)).toBe(390);

@@ -75,3 +75,29 @@ Son medidas de laboratorio en local, no datos de campo. En Vercel cambiarán (CD
 - E2E ampliadas: inglés C1 y teléfono visibles; URL canónica, imagen Open Graph propia y JSON-LD `SoftwareApplication` en `/proyectos/dexlab`; sin scroll horizontal también en `/proyectos/requestflow`. 12 tests en verde.
 - `npm run check` y `next build` sin errores.
 - Lighthouse no se ha repetido tras esta ronda; se medirá sobre el despliegue en Vercel.
+
+## Producción — https://christian-marquez-portfolio.vercel.app (12/10/2026)
+
+- Despliegue con la CLI de Vercel (proyecto `christian-marquez-portfolio`, función Python en `cdg1`).
+- 13 rutas comprobadas con `curl`: 200 en todas las páginas, sitemap, robots, manifiesto, imágenes Open Graph y CV; 404 en una ruta inexistente.
+- `GET /api/erp?op=health` responde desde la función Python de Vercel: `reglas-v1` y `sandbox`.
+- Cabeceras de seguridad presentes (CSP con `frame-src` limitado a DexLab y `frame-ancestors 'none'`, HSTS, `nosniff`).
+- Canonical, `og:image` y sitemap usan el dominio de producción.
+- Suite E2E contra producción (`E2E_BASE_URL=https://christian-marquez-portfolio.vercel.app npx playwright test`): 12/12 en cuatro ejecuciones seguidas, incluida la demo ERP completa sobre la función Python y DexLab dentro del iframe.
+
+### Lighthouse 12 en producción (móvil simulado)
+
+| Página | Rendimiento | Accesibilidad | Buenas prácticas | SEO | LCP | CLS |
+| --- | --- | --- | --- | --- | --- | --- |
+| `/` | 93–98 | 100¹ | 100 | 100 | 2,3 s | 0 |
+| `/proyectos/dexlab` | 96 | 100 | 100 | 100 | 2,5 s | 0 |
+| `/proyectos/requestflow` | 96 | 100 | 100 | 100 | 2,3 s | 0 |
+| `/laboratorio/erp-ia` | 95 | 100 | 100 | 100 | 2,4 s | 0 |
+| `/laboratorio/dashboard` | 98 | 100 | 100 | 100 | 2,3 s | 0 |
+| `/vista-rapida` | 94–97 | 100¹ | 100 | 100 | 2,1 s | 0 |
+
+¹ La primera medida dio 96 por `target-size` (enlaces de email y teléfono demasiado juntos); corregido y vuelto a medir. El rendimiento varía unos puntos entre ejecuciones.
+
+### Hallazgo en DexLab
+
+La prueba del iframe fallaba de forma intermitente: si el buscador de DexLab recibe el foco antes de que la página termine de hidratarse, el índice de búsqueda no se descarga hasta volver a enfocarlo. La prueba ahora reenfoca en cada intento. Probable mejora para DexLab: pedir el índice también al escribir, no solo al enfocar.
