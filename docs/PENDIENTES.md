@@ -18,7 +18,7 @@ Lo que falta para completar el portfolio. Nada de esto aparece en la interfaz p�
 ## Después del despliegue
 
 - [ ] Google Search Console: añadir la propiedad, definir `GOOGLE_SITE_VERIFICATION` en Vercel y enviar `/sitemap.xml`.
-- [ ] Poner el enlace del portfolio en LinkedIn y en los CV.
+- [ ] Poner el enlace del portfolio en LinkedIn (los CV ya lo incluyen desde el 13/10/2026).
 - [ ] Dominio propio (opcional). Si se usa, definir `NEXT_PUBLIC_SITE_URL` y volver a desplegar.
 
 ## Opcional
